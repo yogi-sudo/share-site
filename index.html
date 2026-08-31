@@ -38,6 +38,24 @@
 <style>
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { margin: 0; font-family: "Karla", system-ui, sans-serif; letter-spacing: 0.005em; -webkit-font-smoothing: antialiased; }
+  body { position: relative; background: #f7f1e8; }
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 160px;
+    max-width: 12vw;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 300'><path d='M20 300 C 15 230, 30 190, 22 140 C 16 100, 28 60, 24 10' fill='none' stroke='%237c8f6e' stroke-width='3'/><ellipse cx='10' cy='120' rx='22' ry='9' fill='%237c8f6e' transform='rotate(-35 10 120)'/><ellipse cx='34' cy='185' rx='24' ry='10' fill='%237c8f6e' transform='rotate(30 34 185)'/><ellipse cx='8' cy='245' rx='20' ry='8' fill='%237c8f6e' transform='rotate(-20 8 245)'/><g transform='translate(22,55)'><circle r='19' fill='%239d2235' opacity='0.9'/><circle r='14' fill='%23c0384f' opacity='0.9'/><circle r='9' fill='%23e0929f' opacity='0.95'/><circle r='4' fill='%23f3c9d0'/></g><g transform='translate(30,255)'><circle r='16' fill='%239d2235' opacity='0.85'/><circle r='11' fill='%23c0384f' opacity='0.9'/><circle r='6' fill='%23e0929f'/></g></svg>");
+    background-repeat: repeat-y;
+    background-size: 160px 300px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before { left: 0; background-position: left top; }
+  body::after { right: 0; transform: scaleX(-1); background-position: left top; }
+  @media (max-width: 1100px) { body::before, body::after { display: none; } }
+  x-dc, doc-page { position: relative; z-index: 1; }
   a { color: #9d2235; text-decoration: none; }
   a:hover { color: #c02d43; }
   img, image-slot, video { image-rendering: -webkit-optimize-contrast; }
@@ -1030,6 +1048,28 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+(function(){
+  // This design is authored as fixed-width letter-size "magazine pages"
+  // (not a fluid responsive layout). On a narrow phone viewport that
+  // means horizontal overflow, so scale the whole document down to fit
+  // the screen width, similar to how a PDF viewer fits a page.
+  function fitToViewport(){
+    var html = document.documentElement;
+    html.style.zoom = 1;
+    var contentWidth = document.body.scrollWidth;
+    var viewportWidth = window.innerWidth;
+    if (contentWidth > viewportWidth && viewportWidth > 0) {
+      html.style.zoom = (viewportWidth / contentWidth);
+    }
+  }
+  window.addEventListener('load', fitToViewport);
+  window.addEventListener('resize', fitToViewport);
+  window.addEventListener('orientationchange', fitToViewport);
+  setTimeout(fitToViewport, 400);
+  setTimeout(fitToViewport, 1200);
+})();
 </script>
 <script>
 (function(){
