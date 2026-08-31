@@ -38,7 +38,7 @@
 <style>
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { margin: 0; font-family: "Karla", system-ui, sans-serif; letter-spacing: 0.005em; -webkit-font-smoothing: antialiased; }
-  body { background: #f3ece4; }
+  body { background: #1d1b1a; }
   a { color: #9d2235; text-decoration: none; }
   a:hover { color: #c02d43; }
   img, image-slot, video { image-rendering: -webkit-optimize-contrast; }
@@ -273,7 +273,7 @@
       </div>
       <div style="position:relative;overflow:hidden"><image-slot id="trip-b2" shape="rect" fit="cover" src="assets-web/p09-waterfall-hi.jpg" style="filter:saturate(0.9) contrast(1.03) sepia(0.07);height:100%" placeholder="Photo"></image-slot>
       </div>
-      <div style="position:relative;overflow:hidden"><image-slot id="trip-b3" shape="rect" fit="cover" src="assets-web/u8-poonhill-hug.jpg" style="filter:saturate(0.9) contrast(1.03) sepia(0.07);height:100%;width:100%;object-position:50% 72%" placeholder="Photo"></image-slot>
+      <div style="position:relative;overflow:hidden"><image-slot id="trip-b3" shape="rect" fit="cover" src="assets-web/u8-poonhill-hug.jpg" style="filter:saturate(0.9) contrast(1.03) sepia(0.07);height:100%" placeholder="Photo"></image-slot>
       </div>
       <div style="position:relative;overflow:hidden"><image-slot id="trip-b4" shape="rect" fit="cover" src="assets-web/p01-trek-grass-hi.jpg" style="filter:saturate(0.9) contrast(1.03) sepia(0.07);height:100%;width:100%;object-position:50% 30%" placeholder="Photo"></image-slot>
       </div>
@@ -1031,6 +1031,27 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+(function(){
+  // image-slot components position their photo via an internal pan/zoom
+  // model (left/top/transform on a shadow <img>), not CSS object-position.
+  // Without the original editor's saved crop state, every slot defaults to
+  // a plain centered crop. For slots where that centering misses the
+  // subject, override the shadow <img>'s vertical offset directly.
+  var CROP_OVERRIDES = {
+    'trip-b3': -41.4   // Poon Hill photo: shift crop down to keep faces in frame
+  };
+  function applyCropOverrides(){
+    Object.keys(CROP_OVERRIDES).forEach(function(id){
+      var host = document.getElementById(id);
+      var img = host && host.shadowRoot && host.shadowRoot.querySelector('img');
+      if (img) { img.style.top = CROP_OVERRIDES[id] + '%'; }
+    });
+  }
+  [200, 500, 900, 1500, 3000].forEach(function(ms){ setTimeout(applyCropOverrides, ms); });
+  window.addEventListener('load', applyCropOverrides);
+})();
 </script>
 <script>
 (function(){
