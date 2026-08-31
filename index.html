@@ -8,7 +8,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8C%3C/text%3E%3C/svg%3E">
 <meta property="og:title" content="Smarika — Our Story">
 <meta property="og:description" content="A birthday magazine celebrating seven years, one story at a time.">
-<meta property="og:image" content="assets-web/n2-sunset-selfie-hi.jpg">
+<meta property="og:image" content="assets-web/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <script>
@@ -46,7 +48,7 @@
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { margin: 0; font-family: "Karla", system-ui, sans-serif; letter-spacing: 0.005em; -webkit-font-smoothing: antialiased; }
   html { background: #f7f1e8; height: 100%; }
-  body { background: #f7f1e8; min-height: 100%; }
+  body { background: #f7f1e8 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.28  0 0 0 0 0.24  0 0 0 0 0.20  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); min-height: 100%; }
   a { color: #9d2235; text-decoration: none; }
   a:hover { color: #c02d43; }
   img, image-slot, video { image-rendering: -webkit-optimize-contrast; }
@@ -1040,6 +1042,7 @@ class Component extends DCLogic {
   }
 }
 </script>
+<div id="progress-bar" style="position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,#9d2235,#e0929f);z-index:2000;transition:width 0.1s linear;pointer-events:none"></div>
 <style>
   html { scroll-snap-type: y proximity; }
   section.page { scroll-snap-align: start; }
@@ -1086,6 +1089,40 @@ class Component extends DCLogic {
   document.addEventListener('DOMContentLoaded', initScrollFade);
   setTimeout(initScrollFade, 500);
   setTimeout(initScrollFade, 1500);
+})();
+(function(){
+  // Thin progress bar showing scroll position through the whole "issue".
+  var bar = document.getElementById('progress-bar');
+  function updateProgress(){
+    var doc = document.documentElement;
+    var scrollable = doc.scrollHeight - doc.clientHeight;
+    var pct = scrollable > 0 ? (doc.scrollTop || document.body.scrollTop) / scrollable * 100 : 0;
+    if (bar) bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive: true});
+  window.addEventListener('resize', updateProgress);
+  setTimeout(updateProgress, 300);
+})();
+(function(){
+  // Browsers block autoplay-with-sound; show a one-time hint on the first video.
+  function addUnmuteHint(){
+    var video = document.querySelector('video');
+    if (!video || video.dataset.hintAdded) return;
+    video.dataset.hintAdded = '1';
+    var wrap = video.closest('div');
+    if (!wrap) return;
+    var cs = getComputedStyle(wrap);
+    if (cs.position === 'static') wrap.style.position = 'relative';
+    var hint = document.createElement('div');
+    hint.textContent = '\uD83D\uDD07 tap for sound';
+    hint.style.cssText = 'position:absolute;top:8px;left:8px;z-index:5;background:rgba(20,18,17,0.72);color:#fbfaf8;font-size:10.5px;font-weight:600;letter-spacing:0.06em;padding:5px 9px;border-radius:20px;pointer-events:none;transition:opacity 0.5s ease;font-family:system-ui,sans-serif';
+    wrap.appendChild(hint);
+    function dismiss(){ hint.style.opacity = '0'; setTimeout(function(){ hint.remove(); }, 500); }
+    video.addEventListener('play', dismiss, {once: true});
+    video.addEventListener('click', dismiss, {once: true});
+    setTimeout(dismiss, 6000);
+  }
+  [300, 800, 1500, 3000].forEach(function(ms){ setTimeout(addUnmuteHint, ms); });
 })();
 </script>
 <script>
