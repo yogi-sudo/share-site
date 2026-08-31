@@ -1015,5 +1015,22 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+(function(){
+  function fixVideoControls(){
+    document.querySelectorAll('video').forEach(function(v){
+      if (!v.hasAttribute('controls') || v.controls !== true) {
+        v.controls = true;
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', fixVideoControls);
+  window.addEventListener('load', fixVideoControls);
+  var mo = new MutationObserver(fixVideoControls);
+  if (document.body) mo.observe(document.body, {childList:true, subtree:true});
+  else document.addEventListener('DOMContentLoaded', function(){ mo.observe(document.body, {childList:true, subtree:true}); });
+  [0, 300, 800, 1500, 3000].forEach(function(ms){ setTimeout(fixVideoControls, ms); });
+})();
+</script>
 </body>
 </html>
