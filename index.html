@@ -45,8 +45,8 @@
 <style>
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { margin: 0; font-family: "Karla", system-ui, sans-serif; letter-spacing: 0.005em; -webkit-font-smoothing: antialiased; }
-  html { background: #1d1b1a; }
-  body { background: #1d1b1a; min-height: 100%; }
+  html { background: #000000; height: 100%; }
+  body { background: #000000; min-height: 100%; }
   a { color: #9d2235; text-decoration: none; }
   a:hover { color: #c02d43; }
   img, image-slot, video { image-rendering: -webkit-optimize-contrast; }
@@ -1107,28 +1107,6 @@ class Component extends DCLogic {
   }
   [200, 500, 900, 1500, 3000].forEach(function(ms){ setTimeout(applyCropOverrides, ms); });
   window.addEventListener('load', applyCropOverrides);
-})();
-</script>
-<script>
-(function(){
-  // This design is authored as fixed-width letter-size "magazine pages"
-  // (not a fluid responsive layout). On a narrow phone viewport that
-  // means horizontal overflow, so scale the whole document down to fit
-  // the screen width, similar to how a PDF viewer fits a page.
-  function fitToViewport(){
-    var html = document.documentElement;
-    html.style.zoom = 1;
-    var contentWidth = document.body.scrollWidth;
-    var viewportWidth = window.innerWidth;
-    if (contentWidth > viewportWidth && viewportWidth > 0) {
-      html.style.zoom = (viewportWidth / contentWidth);
-    }
-  }
-  window.addEventListener('load', fitToViewport);
-  window.addEventListener('resize', fitToViewport);
-  window.addEventListener('orientationchange', fitToViewport);
-  setTimeout(fitToViewport, 400);
-  setTimeout(fitToViewport, 1200);
 })();
 </script>
 <script>
