@@ -1126,20 +1126,6 @@ class Component extends DCLogic {
   }
   [300, 800, 1500, 3000].forEach(function(ms){ setTimeout(addUnmuteHint, ms); });
 })();
-(function(){
-  // Native lazy-loading for photos: image-slot's internal <img> doesn't
-  // inherit this from the light-DOM host, so set it directly. Cuts initial
-  // page weight dramatically (58 photos ~11MB) since only on/near-screen
-  // images download up front.
-  function applyLazyLoading(){
-    document.querySelectorAll('image-slot').forEach(function(host){
-      var img = host.shadowRoot && host.shadowRoot.querySelector('img');
-      if (img && img.loading !== 'lazy') { img.loading = 'lazy'; img.decoding = 'async'; }
-    });
-  }
-  [200, 600, 1200, 2500].forEach(function(ms){ setTimeout(applyLazyLoading, ms); });
-  document.addEventListener('DOMContentLoaded', applyLazyLoading);
-})();
 </script>
 <script>
 (function(){
