@@ -1068,10 +1068,11 @@ class Component extends DCLogic {
       if (s) s.style.opacity = '1';
       if (tap) tap.style.opacity = '1';
     });
-    setTimeout(dismissIntro, 2600);
   });
   if (overlay) overlay.addEventListener('click', dismissIntro);
-  setTimeout(dismissIntro, 5000); // safety net in case load never fires
+  // No auto-dismiss: the "tap anywhere to open" copy means what it says.
+  // Long safety net only in case a device never fires a usable interaction.
+  setTimeout(dismissIntro, 20000);
 })();
 (function(){
   // Fade + rise each magazine page in as it scrolls into view.
